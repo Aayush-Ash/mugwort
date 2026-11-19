@@ -1,0 +1,37 @@
+{
+  "name": "mugwort",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "mugwort",
+    "d2c",
+    "ecommerce",
+    "landing-page",
+    "upi",
+    "cod",
+    "shiprocket"
+  ],
+  "author": "Antigravity",
+  "license": "ISC",
+  "description": "High-Converting Single-Product Landing Page & Frictionless Indian Checkout System for Mugwort Herbal Knee & Joint Relief Patches",
+  "dependencies": {
+    "canvas-confetti": "^1.9.4",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.76.0",
+    "qrcode": "^1.5.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwind-merge": "^3.7.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@vitejs/plugin-react": "^6.3.0",
+    "tailwindcss": "^4.3.5",
+    "vite": "^8.3.8"
+  }
+}
