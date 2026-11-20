@@ -5,39 +5,43 @@
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   }
   
-  h1, h2, h3, .font-heading {
-    font-family: 'Cabinet Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
-    letter-spacing: -0.02em;
+  h1, h2, h3, .font-serif-luxury {
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    letter-spacing: -0.015em;
   }
 }
 
-/* Custom smooth animations & helpers */
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(16, 185, 129, 0.75);
-  }
+/* Custom glow and luxury wellness styling */
+.glow-amber-box {
+  box-shadow: 0 0 35px rgba(224, 168, 88, 0.45), 0 0 14px rgba(224, 168, 88, 0.25);
+  border-color: rgba(224, 175, 105, 0.85);
 }
 
-.animate-pulse-glow {
-  animation: pulseGlow 2s infinite ease-in-out;
+.glow-btn-green {
+  background: linear-gradient(135deg, #445834 0%, #364728 100%);
+  box-shadow: 0 4px 18px rgba(68, 88, 52, 0.35);
+  transition: all 0.25s ease-in-out;
 }
 
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+.glow-btn-green:hover {
+  background: linear-gradient(135deg, #3d4f2e 0%, #2e3c22 100%);
+  box-shadow: 0 6px 24px rgba(68, 88, 52, 0.45);
+  transform: translateY(-1px);
 }
 
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 22s linear infinite;
+.bg-linen-stone {
+  background-color: #f6f1e8;
+  background-image: radial-gradient(rgba(200, 185, 165, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-.animate-marquee:hover {
-  animation-play-state: paused;
+/* Organic curved brush underline SVG */
+.brush-underline {
+  background-image: url("data:image/svg+xml,%3Csvg width='240' height='12' viewBox='0 0 240 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 9.5C65 2 175 1.5 238 8' stroke='%23475b39' stroke-width='2.4' stroke-linecap='round' stroke-opacity='0.75'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 100% 9px;
+  padding-bottom: 7px;
 }
 
 /* Custom scrollbar */
@@ -46,12 +50,12 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f1ebd8;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #c8bdab;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #9d917d;
 }

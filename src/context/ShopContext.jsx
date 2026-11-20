@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { BUNDLES } from '../services/bundlesData';
+import { RITUAL_PRODUCTS } from '../services/bundlesData';
 import { lookupPincode } from '../services/pincodeService';
 import { shiprocket } from '../services/shiprocketService';
 import { whatsapp } from '../services/whatsappService';
@@ -8,64 +8,70 @@ import confetti from 'canvas-confetti';
 const ShopContext = createContext();
 
 export function ShopProvider({ children }) {
-  // 1. Bundle selection (Default: 2-Pack Most Popular)
-  const [selectedBundleId, setSelectedBundleId] = useState(2);
-  const selectedBundle = BUNDLES.find(b => b.id === selectedBundleId) || BUNDLES[1];
+  // 1. Product selection (Default: The Complete Ritual Set - $78)
+  const [selectedProductId, setSelectedProductId] = useState(2);
+  const selectedProduct = RITUAL_PRODUCTS.find(p => p.id === selectedProductId) || RITUAL_PRODUCTS[1];
+
+  // Selected Color variant
+  const [selectedColor, setSelectedColor] = useState('Olive Green');
+
+  // Currency Mode (Default '$' as in mockup; supports INR toggle)
+  const [currency, setCurrency] = useState('$');
 
   // 2. Coupon state
   const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState(null); // { code: 'RELIEF50', discount: 50, desc: 'Special ₹50 Cart Recovery Discount' }
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponError, setCouponError] = useState('');
 
-  // 3. Test Mode (₹1 Test Order for TSK-13 verification)
+  // 3. Test Mode (₹1 or $1 Test Order for evaluation)
   const [isTestMode, setIsTestMode] = useState(false);
 
-  // 4. Customer lead & address info
+  // 4. Modals
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [checkoutStep, setCheckoutStep] = useState('details');
+  const [paymentMethod, setPaymentMethod] = useState('upi'); // 'upi' | 'card' | 'cod'
+  const [isRitualVideoOpen, setIsRitualVideoOpen] = useState(false);
+  const [isIngredientsOpen, setIsIngredientsOpen] = useState(false);
+  const [isWhatsAppDrawerOpen, setIsWhatsAppDrawerOpen] = useState(false);
+  const [isShiprocketModalOpen, setIsShiprocketModalOpen] = useState(false);
+  const [isEodConsoleOpen, setIsEodConsoleOpen] = useState(false);
+
+  // 5. Customer info
   const [customer, setCustomer] = useState({
     name: '',
     phone: '',
+    email: '',
     address: '',
     pincode: '110001',
     city: 'New Delhi',
-    state: 'Delhi',
-    landmark: ''
+    state: 'Delhi'
   });
   const [pincodeInfo, setPincodeInfo] = useState({
     serviceable: true,
     city: 'New Delhi',
     state: 'Delhi',
     days: '1–2 Days',
-    courier: 'BlueDart Express'
+    courier: 'BlueDart Air Priority'
   });
   const [isPincodeLoading, setIsPincodeLoading] = useState(false);
 
-  // 5. Checkout UI state
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState('details'); // 'details' | 'upi' | 'cod_otp' | 'success'
-  const [paymentMethod, setPaymentMethod] = useState('upi'); // 'upi' | 'cod'
-
-  // 6. Placed order details
+  // 6. Placed order
   const [currentOrder, setCurrentOrder] = useState(null);
-
-  // 7. Modals & Drawers
-  const [isWhatsAppDrawerOpen, setIsWhatsAppDrawerOpen] = useState(false);
-  const [isShiprocketModalOpen, setIsShiprocketModalOpen] = useState(false);
-  const [isEodConsoleOpen, setIsEodConsoleOpen] = useState(false);
   const [activeTrackingShipment, setActiveTrackingShipment] = useState(null);
 
-  // 8. Device Viewport Mode ('desktop' | 'mobile')
+  // 7. Device Viewport Mode ('desktop' | 'mobile-iphone' | 'mobile-galaxy')
   const [viewportMode, setViewportMode] = useState('desktop');
 
-  // Load existing lead or coupon from URL parameters if any
+  // Check URL coupon parameter on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const urlCoupon = params.get('coupon');
-    if (urlCoupon && urlCoupon.toUpperCase() === 'RELIEF50') {
-      applyCouponCode('RELIEF50');
+    if (urlCoupon) {
+      applyCouponCode(urlCoupon);
     }
   }, []);
 
-  // Update pincode whenever customer.pincode changes (6 digits)
+  // Auto pincode detection
   useEffect(() => {
     if (customer.pincode && customer.pincode.length === 6) {
       let isMounted = true;
@@ -94,46 +100,42 @@ export function ShopProvider({ children }) {
     }
   }, [customer.phone, customer.name]);
 
-  // Pricing math calculations
+  // Pricing calculation
   const calculatePricing = () => {
-    const baseMrp = selectedBundle.mrp;
-    const baseSalePrice = selectedBundle.salePrice;
-    const baseSavings = baseMrp - baseSalePrice;
+    const baseMrp = selectedProduct.mrp;
+    const basePrice = selectedProduct.price;
+    const baseSavings = baseMrp - basePrice;
 
-    // Shipping calculation
-    const shipping = selectedBundle.freeShipping ? 0 : selectedBundle.shippingFee;
+    // Shipping
+    const shipping = 0; // Free worldwide & pan-India shipping for MORA·MORI rituals
 
-    // Coupon discount calculation
+    // Coupon discount
     let couponDiscount = 0;
     if (appliedCoupon) {
-      if (appliedCoupon.code === 'RELIEF50') {
-        couponDiscount = 50;
-      } else if (appliedCoupon.code === 'RELIEF10') {
-        couponDiscount = Math.round(baseSalePrice * 0.10);
+      if (appliedCoupon.code === 'RELIEF50' || appliedCoupon.code === 'RITUAL15') {
+        couponDiscount = currency === '$' ? 12 : 50;
+      } else if (appliedCoupon.code === 'RELIEF10' || appliedCoupon.code === 'RITUAL10') {
+        couponDiscount = Math.round(basePrice * 0.10);
       }
     }
 
-    // Prepaid UPI bonus discount (extra ₹30 off)
-    const prepaidDiscount = paymentMethod === 'upi' ? 30 : 0;
+    // Prepaid discount
+    const prepaidDiscount = paymentMethod === 'upi' ? (currency === '$' ? 4 : 30) : 0;
 
-    // Final total before test mode
-    let calculatedTotal = Math.max(1, baseSalePrice + shipping - couponDiscount - prepaidDiscount);
-
-    // If ₹1 test mode is toggled, override final amount to ₹1
-    const finalAmount = isTestMode ? 1 : calculatedTotal;
-
-    const totalSavings = (baseMrp - finalAmount);
+    let calculatedTotal = Math.max(1, basePrice + shipping - couponDiscount - prepaidDiscount);
+    const finalAmount = isTestMode ? (currency === '$' ? 1 : 1) : calculatedTotal;
+    const totalSavings = baseMrp - finalAmount;
 
     return {
       mrp: baseMrp,
-      salePrice: baseSalePrice,
+      salePrice: basePrice,
       baseSavings,
       shipping,
       couponDiscount,
       prepaidDiscount,
       finalAmount,
       totalSavings,
-      pricePerPatch: (finalAmount / selectedBundle.patchesCount).toFixed(2),
+      currency,
       isTestOrder: isTestMode
     };
   };
@@ -150,26 +152,24 @@ export function ShopProvider({ children }) {
       return false;
     }
 
-    if (code === 'RELIEF50') {
-      const couponObj = {
-        code: 'RELIEF50',
-        discount: 50,
-        desc: 'Special ₹50 Recovery Discount applied!'
-      };
-      setAppliedCoupon(couponObj);
-      setCouponCode('RELIEF50');
+    if (code === 'RELIEF50' || code === 'RITUAL15') {
+      setAppliedCoupon({
+        code,
+        discount: currency === '$' ? 12 : 50,
+        desc: '15% Welcome Ritual Discount Applied'
+      });
+      setCouponCode(code);
       return true;
-    } else if (code === 'RELIEF10') {
-      const couponObj = {
-        code: 'RELIEF10',
+    } else if (code === 'RELIEF10' || code === 'RITUAL10') {
+      setAppliedCoupon({
+        code,
         discountPercent: 10,
-        desc: '10% Instant Discount applied!'
-      };
-      setAppliedCoupon(couponObj);
-      setCouponCode('RELIEF10');
+        desc: '10% Instant Ritual Discount Applied'
+      });
+      setCouponCode(code);
       return true;
     } else {
-      setCouponError('Invalid coupon code. Try RELIEF50 or RELIEF10');
+      setCouponError('Invalid code. Try RITUAL15 or RELIEF50');
       return false;
     }
   };
@@ -180,27 +180,25 @@ export function ShopProvider({ children }) {
     setCouponError('');
   };
 
-  // Open checkout with specific bundle
-  const openCheckoutWithBundle = (bundleId) => {
-    if (bundleId) setSelectedBundleId(bundleId);
+  // Open checkout with specific product
+  const openCheckoutWithProduct = (productId) => {
+    if (productId) setSelectedProductId(productId);
     setCheckoutStep('details');
     setIsCheckoutOpen(true);
   };
 
-  // Place order function (executed after UPI success or COD OTP verification)
+  // Place order
   const placeOrder = async (method = paymentMethod) => {
-    const orderId = `MUG-${Math.floor(100000 + Math.random() * 900000)}`;
+    const orderId = `MORA-${Math.floor(100000 + Math.random() * 900000)}`;
     const currentPricing = calculatePricing();
 
-    // 1. Sync with Shiprocket/NimbusPost Logistics engine
     const shipment = await shiprocket.createShipment({
       orderId,
       customer,
       items: [
         {
-          name: selectedBundle.name,
+          name: `${selectedProduct.name} (${selectedColor})`,
           quantity: 1,
-          patchesCount: selectedBundle.patchesCount,
           price: currentPricing.finalAmount
         }
       ],
@@ -211,10 +209,10 @@ export function ShopProvider({ children }) {
 
     const orderObj = {
       orderId,
-      date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-      time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+      date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
+      time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
       customer: { ...customer },
-      bundle: { ...selectedBundle },
+      product: { ...selectedProduct, selectedColor },
       pricing: { ...currentPricing },
       paymentMethod: method,
       shipment,
@@ -224,11 +222,11 @@ export function ShopProvider({ children }) {
     setCurrentOrder(orderObj);
     setActiveTrackingShipment(shipment);
 
-    // 2. Dispatch automated WhatsApp Order Confirmation trigger
+    // Automated WhatsApp trigger
     const waConfirmation = whatsapp.getTemplateOrderConfirmation({
       orderId,
       customer,
-      bundle: selectedBundle,
+      bundle: selectedProduct,
       paymentMethod: method,
       awb: shipment.awb,
       courier: shipment.courierPartner,
@@ -241,16 +239,13 @@ export function ShopProvider({ children }) {
       recipientName: customer.name
     });
 
-    // 3. Trigger celebratory confetti
     try {
       confetti({
-        particleCount: 80,
-        spread: 70,
+        particleCount: 70,
+        spread: 60,
         origin: { y: 0.6 }
       });
-    } catch (e) {
-      // safe fallback
-    }
+    } catch (e) {}
 
     setCheckoutStep('success');
     return orderObj;
@@ -259,10 +254,14 @@ export function ShopProvider({ children }) {
   return (
     <ShopContext.Provider
       value={{
-        bundles: BUNDLES,
-        selectedBundleId,
-        setSelectedBundleId,
-        selectedBundle,
+        products: RITUAL_PRODUCTS,
+        selectedProductId,
+        setSelectedProductId,
+        selectedProduct,
+        selectedColor,
+        setSelectedColor,
+        currency,
+        setCurrency,
         couponCode,
         setCouponCode,
         appliedCoupon,
@@ -284,8 +283,12 @@ export function ShopProvider({ children }) {
         pricing,
         currentOrder,
         setCurrentOrder,
-        openCheckoutWithBundle,
+        openCheckoutWithProduct,
         placeOrder,
+        isRitualVideoOpen,
+        setIsRitualVideoOpen,
+        isIngredientsOpen,
+        setIsIngredientsOpen,
         isWhatsAppDrawerOpen,
         setIsWhatsAppDrawerOpen,
         isShiprocketModalOpen,

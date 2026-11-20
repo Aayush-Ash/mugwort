@@ -1,60 +1,68 @@
 import React from 'react';
-import { Zap, ArrowRight, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ShoppingBag } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 
 export default function StickyBuyBar() {
-  const { bundles, selectedBundleId, setSelectedBundleId, selectedBundle, openCheckoutWithBundle, pricing } = useShop();
+  const { products, selectedProductId, setSelectedProductId, selectedProduct, openCheckoutWithProduct, pricing, currency, selectedColor } = useShop();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-30 bg-neutral-950/95 backdrop-blur-md border-t border-neutral-800 p-3 sm:py-3.5 sm:px-6 shadow-2xl">
+    <div className="fixed bottom-0 left-0 right-0 z-30 bg-[#faf7f2]/95 backdrop-blur-md border-t border-[#e2d8c8] py-2.5 sm:py-3 px-4 sm:px-8 shadow-xl">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
         
-        {/* Bundle Switcher & Pricing Math */}
+        {/* Product Details & Variant Pill */}
         <div className="flex items-center gap-3">
-          {/* Quick pack switcher pills (hidden on very small mobile, visible on sm+) */}
-          <div className="hidden sm:flex items-center gap-1.5 bg-neutral-900 p-1 rounded-xl border border-neutral-800">
-            {bundles.map(b => (
-              <button
-                key={b.id}
-                onClick={() => setSelectedBundleId(b.id)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  selectedBundleId === b.id
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'text-neutral-400 hover:text-white'
-                }`}
-              >
-                {b.id}-Pack
-              </button>
-            ))}
+          <div className="hidden sm:block w-10 h-10 rounded-xl overflow-hidden bg-[#efe9dd] border border-[#d6ccbb] shrink-0">
+            <img
+              src={selectedProduct.image}
+              alt={selectedProduct.name}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           <div>
             <div className="flex items-baseline gap-2">
-              <span className="text-xl sm:text-2xl font-black text-white font-heading">
-                ₹{pricing.finalAmount}
+              <span className="font-serif-luxury text-lg sm:text-xl font-medium text-[#1e1711]">
+                {currency}{pricing.finalAmount}
               </span>
-              <span className="text-xs text-neutral-400 line-through">
-                ₹{pricing.mrp}
+              <span className="text-xs text-[#8c7d6e] line-through">
+                {currency}{pricing.mrp}
               </span>
-              <span className="text-[10px] sm:text-xs font-extrabold text-amber-400 bg-amber-400/10 border border-amber-400/30 px-1.5 py-0.2 rounded">
-                Save ₹{pricing.totalSavings}
+              <span className="text-[10px] text-[#445834] font-semibold bg-[#efe9dd] px-2 py-0.5 rounded-full border border-[#dcd2c0]">
+                Save {selectedProduct.savingsPercent}%
               </span>
             </div>
-            <p className="text-[11px] text-emerald-400 font-semibold truncate max-w-[180px] sm:max-w-none">
-              {selectedBundle.name} &bull; {selectedBundle.freeShipping ? 'Free Delivery' : '+₹49 Shipping'}
+            <p className="text-[11px] text-[#55473a] font-normal truncate max-w-[200px] sm:max-w-none">
+              {selectedProduct.name} &bull; {selectedColor} &bull; Free Global & Pan-India Courier
             </p>
           </div>
         </div>
 
-        {/* CTA Button */}
+        {/* Right CTA Button */}
         <div className="flex items-center gap-2">
+          {/* Quick Product Switcher */}
+          <div className="hidden md:flex items-center gap-1 bg-[#efe9dd] p-1 rounded-full border border-[#ded5c5]">
+            {products.map(p => (
+              <button
+                key={p.id}
+                onClick={() => setSelectedProductId(p.id)}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                  selectedProductId === p.id
+                    ? 'bg-[#445834] text-white shadow-sm'
+                    : 'text-[#55473a] hover:text-[#221a13]'
+                }`}
+              >
+                {p.name.split(' ')[1] || 'Set'}
+              </button>
+            ))}
+          </div>
+
           <button
-            onClick={() => openCheckoutWithBundle(selectedBundleId)}
-            className="bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-sm sm:text-base py-3 px-5 sm:px-8 rounded-xl transition-all shadow-lg shadow-emerald-600/30 flex items-center gap-2 cursor-pointer transform hover:-translate-y-0.5"
+            onClick={() => openCheckoutWithProduct(selectedProductId)}
+            className="glow-btn-green text-white font-medium text-xs sm:text-sm py-2.5 sm:py-3 px-5 sm:px-7 rounded-full flex items-center gap-2 cursor-pointer transition-all shadow-md"
           >
-            <Zap className="w-4 h-4 fill-current text-amber-300" />
-            <span>Order Now</span>
-            <ArrowRight className="w-4 h-4" />
+            <ShoppingBag className="w-4 h-4" />
+            <span>Begin Ritual</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
