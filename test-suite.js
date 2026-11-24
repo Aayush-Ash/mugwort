@@ -1,4 +1,4 @@
-import { RITUAL_PRODUCTS, DAILY_PRACTICES, ANATOMY_HOTSPOTS, RITUAL_STEPS, PRESS_MENTIONS, TESTIMONIALS } from './src/services/bundlesData.js';
+import { RITUAL_PRODUCTS, DAILY_PRACTICES, ANATOMY_HOTSPOTS, RITUAL_STEPS, PRESS_MENTIONS, TESTIMONIALS, RITUAL_VIDEOS } from './src/services/bundlesData.js';
 import { lookupPincode } from './src/services/pincodeService.js';
 import { buildUpiUri, buildAppSpecificUri, generateUpiQrCode, UPI_CONFIG } from './src/services/upiService.js';
 import { whatsapp } from './src/services/whatsappService.js';
@@ -21,6 +21,15 @@ RITUAL_PRODUCTS.forEach(p => {
 console.log(`\n▶ [The Daily Practice] Verifying 4 Use Cases...`);
 DAILY_PRACTICES.forEach((dp, i) => {
   console.log(`  ✓ Card ${i+1} [${dp.tag}]: ${dp.title} — "${dp.subtitle}"`);
+});
+
+// 2.5 Video Showcase (How & Why We Use This)
+console.log(`\n▶ [Video Showcase: How & Why] Verifying 4 Ritual Showcase Videos with Glass Effect...`);
+RITUAL_VIDEOS.forEach((v, i) => {
+  console.log(`  ✓ Video ${v.number} [${v.category}]: "${v.title}"`);
+  console.log(`    File: ${v.videoSrc} (Target: ${v.acupoint})`);
+  console.log(`    Why: "${v.whyHeadline}" | How: ${v.howSteps.length} Guided Steps`);
+  console.log(`    Product Pair: ${v.targetProduct} (ID: ${v.targetProductId})`);
 });
 
 // 3. The Botanical Anatomy & The Ritual

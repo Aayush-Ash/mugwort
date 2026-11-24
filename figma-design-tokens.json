@@ -1,0 +1,83 @@
+{
+  "name": "MORA · MORI® Design System",
+  "version": "1.0.0",
+  "description": "Figma Design System Tokens for MORA · MORI® Herbal Meridian Tapper Landing Page",
+  "color": {
+    "background": {
+      "travertine": { "value": "#f6f1e8", "type": "color", "description": "Primary page background" },
+      "card": { "value": "#faf7f2", "type": "color", "description": "Frosted card background" },
+      "stoneDark": { "value": "#efe9dd", "type": "color", "description": "Accent stone container" }
+    },
+    "brand": {
+      "olive": { "value": "#445834", "type": "color", "description": "Primary action green" },
+      "oliveHover": { "value": "#38482a", "type": "color", "description": "Button hover state" },
+      "oliveLight": { "value": "#8ea77b", "type": "color", "description": "Accent green" }
+    },
+    "accent": {
+      "amberGlow": { "value": "#e0af69", "type": "color", "description": "Most Loved aura and star ratings" },
+      "amberGlowSoft": { "value": "rgba(224, 168, 88, 0.45)", "type": "color", "description": "Shadow glow aura" }
+    },
+    "dark": {
+      "espresso": { "value": "#1c1612", "type": "color", "description": "Footer and feature strip" },
+      "espressoSoft": { "value": "#221a14", "type": "color", "description": "Secondary dark card" },
+      "espressoBorder": { "value": "#31261e", "type": "color", "description": "Dark divider" }
+    },
+    "text": {
+      "primary": { "value": "#1e1711", "type": "color", "description": "Heading text" },
+      "body": { "value": "#4f4337", "type": "color", "description": "Body paragraph" },
+      "muted": { "value": "#615448", "type": "color", "description": "Eyebrow & labels" },
+      "light": { "value": "#ded6cb", "type": "color", "description": "Footer light text" }
+    },
+    "border": {
+      "subtle": { "value": "#e4dcce", "type": "color", "description": "Card borders" },
+      "cardHighlight": { "value": "#e0af69", "type": "color", "description": "Featured card border" }
+    }
+  },
+  "typography": {
+    "fontFamilies": {
+      "serif": { "value": "Playfair Display, Cormorant Garamond, Georgia, serif", "type": "fontFamilies" },
+      "sans": { "value": "Plus Jakarta Sans, system-ui, sans-serif", "type": "fontFamilies" }
+    },
+    "heading-hero": {
+      "fontFamily": "serif",
+      "fontWeight": "400",
+      "fontSize": "56px",
+      "lineHeight": "1.12",
+      "letterSpacing": "-0.015em"
+    },
+    "heading-section": {
+      "fontFamily": "serif",
+      "fontWeight": "400",
+      "fontSize": "40px",
+      "lineHeight": "1.2"
+    },
+    "eyebrow": {
+      "fontFamily": "sans",
+      "fontWeight": "600",
+      "fontSize": "12px",
+      "letterSpacing": "0.22em",
+      "textTransform": "uppercase"
+    },
+    "body-regular": {
+      "fontFamily": "sans",
+      "fontWeight": "400",
+      "fontSize": "14px",
+      "lineHeight": "1.6"
+    }
+  },
+  "radii": {
+    "pill": { "value": "9999px", "type": "borderRadius" },
+    "card": { "value": "24px", "type": "borderRadius" },
+    "container": { "value": "32px", "type": "borderRadius" }
+  },
+  "shadows": {
+    "amberAura": {
+      "value": "0 0 35px rgba(224, 168, 88, 0.45), 0 0 14px rgba(224, 168, 88, 0.25)",
+      "type": "boxShadow"
+    },
+    "buttonGreen": {
+      "value": "0 4px 18px rgba(68, 88, 52, 0.35)",
+      "type": "boxShadow"
+    }
+  }
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import { ShopProvider, useShop } from './context/ShopContext';
 import MoraNavbar from './components/MoraNavbar';
 import MoraHero from './components/MoraHero';
+import VideoShowcaseSection from './components/VideoShowcaseSection';
 import DailyPracticeSection from './components/DailyPracticeSection';
 import BotanicalAnatomySection from './components/BotanicalAnatomySection';
 import CuratedRitualsSection from './components/CuratedRitualsSection';
@@ -49,6 +50,9 @@ function StoreLayout() {
         {/* Section 01: Navbar & Hero Section */}
         <MoraNavbar />
         <MoraHero />
+
+        {/* Section 01.5: Video Showcase (How & Why We Use This with Glass Effect Border) */}
+        <VideoShowcaseSection />
 
         {/* Section 02: The Daily Practice (4 Ways to Use) */}
         <DailyPracticeSection />

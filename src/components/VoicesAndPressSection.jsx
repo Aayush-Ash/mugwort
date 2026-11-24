@@ -60,7 +60,7 @@ export default function VoicesAndPressSection() {
           <div className="rounded-3xl overflow-hidden relative shadow-sm border border-[#e4dcce] aspect-[4/5] md:aspect-auto flex flex-col justify-end">
             <img
               src="/assets/mora-mori/practitioner.png"
-              alt="Elena Vass - Verified Bodywork Practitioner holding Mugwort Hammer"
+              alt="Elena Vass - Verified Bodywork Practitioner holding Muscle Tapper"
               className="absolute inset-0 w-full h-full object-cover"
             />
             {/* Bottom Tag */}

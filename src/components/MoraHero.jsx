@@ -3,28 +3,33 @@ import { ArrowRight, Play, Leaf, Activity, RefreshCw, Laptop } from 'lucide-reac
 import { useShop } from '../context/ShopContext';
 
 export default function MoraHero() {
-  const { openCheckoutWithProduct, setIsRitualVideoOpen } = useShop();
+  const { openCheckoutWithProduct, setIsRitualVideoOpen, openVideoModal } = useShop();
 
   const scrollToRituals = () => {
     const el = document.getElementById('curated-rituals');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const scrollToVideos = () => {
+    const el = document.getElementById('video-showcase');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section className="relative overflow-hidden bg-[#f6f1e8] text-[#2c241c] pt-8 sm:pt-14 pb-0">
-      
+
       {/* Subtle organic sunlight & shadow effect */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
-        
+
         {/* Main Hero Content & Product Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
-          
+
           {/* Left Column: Typography & CTAs */}
           <div className="lg:col-span-6 space-y-6 sm:space-y-7 z-10 py-4 sm:py-8">
-            
+
             {/* Eyebrow */}
             <div className="text-[12px] sm:text-[13px] font-semibold tracking-[0.22em] uppercase text-[#615448]">
-              MUGWORT HAMMER
+              MUGWORT MUSCLE TAPPER
             </div>
 
             {/* Headline with curved green brush underline */}
@@ -53,7 +58,7 @@ export default function MoraHero() {
 
             {/* Subtitle */}
             <p className="text-sm sm:text-base text-[#4f4337] leading-relaxed max-w-xl font-normal">
-              A traditional tapper, reimagined for modern life. Daily tapping with the power of mugwort to ease muscle stiffness, support circulation, and help you feel lighter and more energized.
+              A traditional muscle tapper, reimagined for modern life. Daily tapping with the power of mugwort to ease muscle stiffness, support circulation, and help you feel lighter and more energized.
             </p>
 
             {/* CTA Buttons */}
@@ -62,12 +67,15 @@ export default function MoraHero() {
                 onClick={scrollToRituals}
                 className="glow-btn-green text-white font-medium text-xs sm:text-sm px-6 sm:px-8 py-3.5 rounded-full flex items-center gap-2 cursor-pointer transition-all"
               >
-                <span>SHOP MUGWORT HAMMER</span>
+                <span>SHOP MUSCLE TAPPER</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
               <button
-                onClick={() => setIsRitualVideoOpen(true)}
+                onClick={() => {
+                  if (openVideoModal) openVideoModal(0);
+                  else setIsRitualVideoOpen(true);
+                }}
                 className="text-xs sm:text-sm font-medium text-[#2d241d] hover:text-[#445834] transition-colors flex items-center gap-2 underline underline-offset-4 cursor-pointer"
               >
                 <span>Watch the 15s Ritual</span>
@@ -79,11 +87,11 @@ export default function MoraHero() {
 
           {/* Right Column: Hero Photo with Interactive Hotspots */}
           <div className="lg:col-span-6 relative flex items-center justify-center">
-            
+
             <div className="relative w-full max-w-lg lg:max-w-none rounded-2xl overflow-hidden shadow-sm group">
               <img
                 src="/assets/mora-mori/hero_product.png"
-                alt="MORA · MORI Mugwort Body Oil and Wellness Hammers on Travertine Stone"
+                alt="MORA · MORI Mugwort Body Oil and Wellness Muscle Tappers on Travertine Stone"
                 className="w-full h-auto object-cover transform hover:scale-[1.01] transition-transform duration-700"
               />
 
@@ -133,7 +141,7 @@ export default function MoraHero() {
       <div className="mt-12 bg-[#201813] text-[#ede6dc] border-t border-[#31261e]">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 sm:py-4.5">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs sm:text-[13px] font-normal">
-            
+
             <div className="flex items-center gap-2.5 justify-center md:justify-start border-r border-[#382c23] pr-2 last:border-r-0">
               <Leaf className="w-4 h-4 text-[#8ea77b] shrink-0 stroke-[1.8]" />
               <span className="text-[#ded5c8]">Infused with mugwort</span>

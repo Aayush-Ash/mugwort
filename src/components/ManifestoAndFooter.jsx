@@ -109,7 +109,7 @@ export default function ManifestoAndFooter() {
                 SHOP
               </h4>
               <ul className="space-y-2.5 text-[#b8ada0]">
-                <li><a href="#curated-rituals" className="hover:text-white transition-colors">Mugwort Hammer</a></li>
+                <li><a href="#curated-rituals" className="hover:text-white transition-colors">Muscle Tapper</a></li>
                 <li><a href="#curated-rituals" className="hover:text-white transition-colors">Ritual Sets</a></li>
                 <li><a href="#curated-rituals" className="hover:text-white transition-colors">Body Oil</a></li>
                 <li><a href="#curated-rituals" className="hover:text-white transition-colors">Gifting</a></li>

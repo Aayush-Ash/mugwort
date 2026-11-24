@@ -31,6 +31,12 @@ export function ShopProvider({ children }) {
   const [checkoutStep, setCheckoutStep] = useState('details');
   const [paymentMethod, setPaymentMethod] = useState('upi'); // 'upi' | 'card' | 'cod'
   const [isRitualVideoOpen, setIsRitualVideoOpen] = useState(false);
+  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+
+  const openVideoModal = (index = 0) => {
+    setActiveVideoIndex(index);
+    setIsRitualVideoOpen(true);
+  };
   const [isIngredientsOpen, setIsIngredientsOpen] = useState(false);
   const [isWhatsAppDrawerOpen, setIsWhatsAppDrawerOpen] = useState(false);
   const [isShiprocketModalOpen, setIsShiprocketModalOpen] = useState(false);
@@ -287,6 +293,9 @@ export function ShopProvider({ children }) {
         placeOrder,
         isRitualVideoOpen,
         setIsRitualVideoOpen,
+        activeVideoIndex,
+        setActiveVideoIndex,
+        openVideoModal,
         isIngredientsOpen,
         setIsIngredientsOpen,
         isWhatsAppDrawerOpen,

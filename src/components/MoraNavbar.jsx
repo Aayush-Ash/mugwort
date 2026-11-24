@@ -24,6 +24,12 @@ export default function MoraNavbar() {
         {/* Center: Navigation Links */}
         <nav className="hidden md:flex items-center gap-8 lg:gap-10 text-[12px] font-semibold tracking-[0.16em] uppercase text-[#332920]">
           <button 
+            onClick={() => scrollToSection('video-showcase')} 
+            className="hover:text-[#445834] transition-colors cursor-pointer text-[#445834] font-bold"
+          >
+            How & Why
+          </button>
+          <button 
             onClick={() => scrollToSection('curated-rituals')} 
             className="hover:text-[#445834] transition-colors cursor-pointer"
           >
