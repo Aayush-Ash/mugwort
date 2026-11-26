@@ -3,6 +3,7 @@ import { ShopProvider, useShop } from './context/ShopContext';
 import MoraNavbar from './components/MoraNavbar';
 import MoraHero from './components/MoraHero';
 import VideoShowcaseSection from './components/VideoShowcaseSection';
+import ThreeColorsShowcaseSection from './components/ThreeColorsShowcaseSection';
 import DailyPracticeSection from './components/DailyPracticeSection';
 import BotanicalAnatomySection from './components/BotanicalAnatomySection';
 import CuratedRitualsSection from './components/CuratedRitualsSection';
@@ -53,6 +54,9 @@ function StoreLayout() {
 
         {/* Section 01.5: Video Showcase (How & Why We Use This with Glass Effect Border) */}
         <VideoShowcaseSection />
+
+        {/* Section 03: Available in 3 Colors (Interactive Touch & 1-Click Buy / Add to Cart) */}
+        <ThreeColorsShowcaseSection />
 
         {/* Section 02: The Daily Practice (4 Ways to Use) */}
         <DailyPracticeSection />

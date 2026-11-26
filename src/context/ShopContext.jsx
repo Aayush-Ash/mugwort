@@ -15,6 +15,36 @@ export function ShopProvider({ children }) {
   // Selected Color variant
   const [selectedColor, setSelectedColor] = useState('Olive Green');
 
+  // Cart state & toast notification
+  const [cartItems, setCartItems] = useState([
+    { productId: 1, color: 'Olive Green', quantity: 1 }
+  ]);
+  const [cartToast, setCartToast] = useState(null);
+
+  const addToCart = (productId = 1, color = selectedColor) => {
+    const activeColor = color || selectedColor || 'Olive Green';
+    setSelectedColor(activeColor);
+    setSelectedProductId(productId || 1);
+
+    setCartItems(prev => {
+      const existing = prev.find(item => item.productId === productId && item.color === activeColor);
+      if (existing) {
+        return prev.map(item => item === existing ? { ...item, quantity: item.quantity + 1 } : item);
+      }
+      return [...prev, { productId, color: activeColor, quantity: 1 }];
+    });
+
+    setCartToast({
+      message: `Added ${activeColor} Muscle Tapper to Cart`,
+      color: activeColor,
+      time: Date.now()
+    });
+
+    setTimeout(() => {
+      setCartToast(null);
+    }, 4500);
+  };
+
   // Currency Mode (Default '$' as in mockup; supports INR toggle)
   const [currency, setCurrency] = useState('$');
 
@@ -186,9 +216,10 @@ export function ShopProvider({ children }) {
     setCouponError('');
   };
 
-  // Open checkout with specific product
-  const openCheckoutWithProduct = (productId) => {
+  // Open checkout with specific product & color
+  const openCheckoutWithProduct = (productId, color) => {
     if (productId) setSelectedProductId(productId);
+    if (color) setSelectedColor(color);
     setCheckoutStep('details');
     setIsCheckoutOpen(true);
   };
@@ -290,6 +321,11 @@ export function ShopProvider({ children }) {
         currentOrder,
         setCurrentOrder,
         openCheckoutWithProduct,
+        cartItems,
+        setCartItems,
+        addToCart,
+        cartToast,
+        setCartToast,
         placeOrder,
         isRitualVideoOpen,
         setIsRitualVideoOpen,
