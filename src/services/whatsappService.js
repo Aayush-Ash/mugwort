@@ -60,13 +60,14 @@ export class WhatsAppService {
   }
 
   getTemplateOrderConfirmation(orderData) {
-    const { orderId, customer, bundle, paymentMethod, awb, totalAmount } = orderData;
+    const { orderId, customer, bundle, product, paymentMethod, awb, totalAmount } = orderData;
     const name = customer?.name?.trim() || 'Valued Customer';
+    const productName = bundle?.name || product?.name || 'MORA · MORI® Muscle Tapper';
     return {
       type: 'ORDER_CONFIRMED',
       title: 'Order Confirmation & Courier Tracking',
       triggerCondition: 'Triggered immediately upon successful UPI or COD placement',
-      message: `🎉 *Order Confirmed! # ${orderId}*\n\nNamaste ${name}! Your order for *${bundle.name}* (Amount: ₹${totalAmount}) has been verified.\n\n📦 *Courier Partner:* ${orderData.courier || 'Blue Dart / Delhivery'}\n🚚 *AWB Tracking #:* ${awb || 'Generating'}\n📍 *Dispatch Hub:* Haryana Central Warehouse (Next 24 Hrs)\n\nTrack your live delivery status in real-time:\n👉 https://mugwort.in/track/${orderId}\n\nThank you for choosing Mugwort Herbal Therapy! 🌿`,
+      message: `🎉 *Order Confirmed! # ${orderId}*\n\nNamaste ${name}! Your order for *${productName}* (Amount: ₹${totalAmount}) has been verified.\n\n📦 *Courier Partner:* ${orderData.courier || 'Blue Dart / Delhivery'}\n🚚 *AWB Tracking #:* ${awb || 'Generating'}\n📍 *Dispatch Hub:* Haryana Central Warehouse (Next 24 Hrs)\n\nTrack your live delivery status in real-time:\n👉 https://mugwort.in/track/${orderId}\n\nThank you for choosing Mugwort Herbal Therapy! 🌿`,
       rawText: `Order #${orderId} Confirmed! Amount: ₹${totalAmount}. Courier AWB: ${awb}. Track: https://mugwort.in/track/${orderId}`
     };
   }

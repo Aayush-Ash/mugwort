@@ -14,6 +14,7 @@ import {
 import { useShop } from '../context/ShopContext';
 import UpiPaymentSection from './UpiPaymentSection';
 import CodOtpSection from './CodOtpSection';
+import RazorpayPaymentSection from './RazorpayPaymentSection';
 
 export default function CheckoutModal() {
   const { 
@@ -64,8 +65,8 @@ export default function CheckoutModal() {
     setCheckoutStep('payment');
   };
 
-  const handleSuccessfulPayment = async (method) => {
-    await placeOrder(method);
+  const handleSuccessfulPayment = async (method, paymentDetails = {}) => {
+    await placeOrder(method, paymentDetails);
   };
 
   return (
@@ -227,46 +228,73 @@ export default function CheckoutModal() {
                   </button>
                 </div>
 
-                {/* Payment Mode Selector */}
-                <div className="grid grid-cols-2 gap-2 p-1 bg-[#efe8d8] rounded-2xl border border-[#ded5c3]">
+                {/* Payment Mode Selector: Razorpay / Direct UPI / COD */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 bg-[#efe8d8] rounded-2xl border border-[#ded5c3]">
+                  
+                  {/* Razorpay Option (Primary / Recommended) */}
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('razorpay')}
+                    className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
+                      paymentMethod === 'razorpay'
+                        ? 'bg-[#445834] text-white shadow-md ring-1 ring-[#445834]'
+                        : 'text-[#55473a] hover:text-[#221a13] hover:bg-white/50'
+                    }`}
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <CreditCard className="w-3.5 h-3.5" />
+                      Razorpay Secure
+                    </span>
+                    <span className={`text-[10px] font-normal ${paymentMethod === 'razorpay' ? 'text-white/90' : 'text-[#736456]'}`}>
+                      UPI, Cards, NetBanking
+                    </span>
+                  </button>
+
+                  {/* 1-Click UPI Option */}
                   <button
                     type="button"
                     onClick={() => setPaymentMethod('upi')}
                     className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
                       paymentMethod === 'upi'
-                        ? 'bg-[#445834] text-white shadow-md'
-                        : 'text-[#55473a] hover:text-[#221a13]'
+                        ? 'bg-[#445834] text-white shadow-md ring-1 ring-[#445834]'
+                        : 'text-[#55473a] hover:text-[#221a13] hover:bg-white/50'
                     }`}
                   >
                     <span className="flex items-center gap-1">
                       <Zap className="w-3.5 h-3.5 fill-current text-[#f4d187]" />
-                      1-Click UPI &bull; Instant
+                      Direct UPI / QR
                     </span>
-                    <span className="text-[10px] text-white/80 font-normal">
-                      Zero Fees &bull; Priority Air Courier
+                    <span className={`text-[10px] font-normal ${paymentMethod === 'upi' ? 'text-white/90' : 'text-[#736456]'}`}>
+                      Instant 1-Tap Pay
                     </span>
                   </button>
 
+                  {/* COD Option */}
                   <button
                     type="button"
                     onClick={() => setPaymentMethod('cod')}
                     className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
                       paymentMethod === 'cod'
-                        ? 'bg-[#445834] text-white shadow-md'
-                        : 'text-[#55473a] hover:text-[#221a13]'
+                        ? 'bg-[#445834] text-white shadow-md ring-1 ring-[#445834]'
+                        : 'text-[#55473a] hover:text-[#221a13] hover:bg-white/50'
                     }`}
                   >
                     <span>Cash on Delivery</span>
-                    <span className="text-[10px] text-white/80 font-normal">
+                    <span className={`text-[10px] font-normal ${paymentMethod === 'cod' ? 'text-white/90' : 'text-[#736456]'}`}>
                       OTP Verified &bull; Pan-India
                     </span>
                   </button>
+
                 </div>
 
                 {/* Tab content */}
-                {paymentMethod === 'upi' ? (
+                {paymentMethod === 'razorpay' && (
+                  <RazorpayPaymentSection onPaymentSuccess={handleSuccessfulPayment} />
+                )}
+                {paymentMethod === 'upi' && (
                   <UpiPaymentSection onPaymentSuccess={handleSuccessfulPayment} />
-                ) : (
+                )}
+                {paymentMethod === 'cod' && (
                   <CodOtpSection onOtpVerified={handleSuccessfulPayment} />
                 )}
               </div>

@@ -44,7 +44,8 @@ export default function OrderSuccessModal() {
   const waTemplate = whatsapp.getTemplateOrderConfirmation({
     orderId: currentOrder.orderId,
     customer: currentOrder.customer,
-    bundle: currentOrder.bundle,
+    bundle: currentOrder.product || currentOrder.bundle,
+    product: currentOrder.product,
     paymentMethod: currentOrder.paymentMethod,
     awb: currentOrder.shipment?.awb,
     courier: currentOrder.shipment?.courierPartner,
@@ -89,9 +90,17 @@ export default function OrderSuccessModal() {
             </div>
             <div>
               <span className="text-neutral-400">Payment: </span>
-              <span className="text-emerald-400 font-bold uppercase">{currentOrder.paymentMethod}</span>
-              <span className="text-neutral-400 ml-1">(₹{currentOrder.pricing.finalAmount})</span>
+              <span className="text-emerald-400 font-bold uppercase">
+                {currentOrder.paymentMethod === 'razorpay' ? 'Razorpay (Paid Online)' : currentOrder.paymentMethod}
+              </span>
+              <span className="text-neutral-400 ml-1">({currentOrder.pricing?.currency || '₹'}{currentOrder.pricing.finalAmount})</span>
             </div>
+            {currentOrder.paymentId && (
+              <div className="w-full pt-1 text-[11px] text-neutral-400 font-mono flex items-center justify-between">
+                <span>Razorpay Payment Ref:</span>
+                <span className="text-emerald-400 font-semibold">{currentOrder.paymentId}</span>
+              </div>
+            )}
           </div>
 
           {/* Courier Sync Status */}

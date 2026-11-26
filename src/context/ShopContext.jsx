@@ -59,7 +59,7 @@ export function ShopProvider({ children }) {
   // 4. Modals
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState('details');
-  const [paymentMethod, setPaymentMethod] = useState('upi'); // 'upi' | 'card' | 'cod'
+  const [paymentMethod, setPaymentMethod] = useState('razorpay'); // 'razorpay' | 'upi' | 'cod'
   const [isRitualVideoOpen, setIsRitualVideoOpen] = useState(false);
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
 
@@ -155,8 +155,8 @@ export function ShopProvider({ children }) {
       }
     }
 
-    // Prepaid discount
-    const prepaidDiscount = paymentMethod === 'upi' ? (currency === '$' ? 4 : 30) : 0;
+    // Prepaid discount (Instant ₹30 or $4 discount for Razorpay / UPI)
+    const prepaidDiscount = (paymentMethod === 'upi' || paymentMethod === 'razorpay') ? (currency === '$' ? 4 : 30) : 0;
 
     let calculatedTotal = Math.max(1, basePrice + shipping - couponDiscount - prepaidDiscount);
     const finalAmount = isTestMode ? (currency === '$' ? 1 : 1) : calculatedTotal;
@@ -225,8 +225,8 @@ export function ShopProvider({ children }) {
   };
 
   // Place order
-  const placeOrder = async (method = paymentMethod) => {
-    const orderId = `MORA-${Math.floor(100000 + Math.random() * 900000)}`;
+  const placeOrder = async (method = paymentMethod, paymentDetails = {}) => {
+    const orderId = paymentDetails.orderId || `MORA-${Math.floor(100000 + Math.random() * 900000)}`;
     const currentPricing = calculatePricing();
 
     const shipment = await shiprocket.createShipment({
@@ -249,15 +249,20 @@ export function ShopProvider({ children }) {
       date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
       time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
       customer: { ...customer },
+      bundle: { ...selectedProduct, selectedColor },
       product: { ...selectedProduct, selectedColor },
       pricing: { ...currentPricing },
       paymentMethod: method,
+      paymentId: paymentDetails.paymentId || null,
       shipment,
       status: 'CONFIRMED'
     };
 
     setCurrentOrder(orderObj);
     setActiveTrackingShipment(shipment);
+
+    // Clear cart upon successful order completion
+    setCartItems([]);
 
     // Automated WhatsApp trigger
     const waConfirmation = whatsapp.getTemplateOrderConfirmation({
